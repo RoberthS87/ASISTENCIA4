@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RS - Sistema de Asistencia Híbrido</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,15 +22,15 @@
         <iframe id="iframe-google" class="area-app" src="https://script.google.com/macros/s/AKfycby1oj3xk1rwFjAW87qsRxCdvAI-2QyVmAxYfkqD5MpUYYaXK-XYfCK1WPb7tDiSwKjF/exec"></iframe>
 
         <div class="area-camara-pc text-center">
-            <h5 class="fw-bold mb-1 text-info">CÁMARA WEB (PC)</h5>
-            <p class="text-muted small mb-3">Válido para marcar en computadoras</p>
+            <h5 class="fw-bold mb-1 text-info">CAMARA WEB (PC)</h5>
+            <p class="text-muted small mb-3">Valido para marcar en computadoras</p>
             
             <video id="webcam" autoplay playsinline></video>
             
             <button class="btn btn-info w-100 mt-3 p-2 fw-bold text-white shadow" onclick="tomarFotoPC()">
-                ?? CAPTURAR ROSTRO
+                CAPTURAR ROSTRO
             </button>
-            <small class="text-muted mt-3 d-block" style="font-size: 11px;">Al capturar, la foto se inyectará de inmediato en el formulario de la izquierda.</small>
+            <small class="text-muted mt-3 d-block" style="font-size: 11px;">Al capturar, la foto se inyectara de inmediato en el formulario de la izquierda.</small>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         let streamWebcam = null;
         const video = document.getElementById('webcam');
 
-        // Solo encender la webcam si el usuario está en una PC de escritorio o Laptop
+        // Solo encender la webcam si el usuario está en una PC o Laptop
         if (window.innerWidth > 768) {
             navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: false })
                 .then(stream => {
@@ -46,36 +46,35 @@
                     video.srcObject = stream;
                 })
                 .catch(err => {
-                    alert("Asegúrate de dar permisos a la cámara en el candado del navegador.");
+                    alert("Asegurate de dar permisos a la camara en el candado del navegador.");
                 });
         }
 
         function tomarFotoPC() {
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
-    const ctx = canvas.getContext('2d');
-    
-    // Efecto espejo natural
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    const base64Img = canvas.toDataURL('image/jpeg');
-    
-    // Capturamos el iFrame de Google
-    const iframeElement = document.getElementById('iframe-google');
-    if (iframeElement) {
-        const iframeWindow = iframeElement.contentWindow;
-        
-        // CORRECCIÓN: Enviamos la foto asegurando el canal de comunicación activo
-        iframeWindow.postMessage({ tipo: "FOTO_PC", base64: base64Img }, iframeElement.src);
-        
-        console.log("Foto enviada con éxito al formulario de Google Script.");
-    } else {
-        console.error("No se encontró el formulario de Google (iframe-google).");
-    }
-}
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            
+            // Efecto espejo natural
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const base64Img = canvas.toDataURL('image/jpeg');
+            
+            // Capturamos el iFrame de Google
+            const iframeElement = document.getElementById('iframe-google');
+            if (iframeElement) {
+                const iframeWindow = iframeElement.contentWindow;
+                
+                // Enviamos la foto asegurando el canal de comunicación activo hacia el src exacto
+                iframeWindow.postMessage({ tipo: "FOTO_PC", base64: base64Img }, iframeElement.src);
+                console.log("Foto enviada con exito al formulario de Google Script.");
+            } else {
+                console.error("No se encontro el formulario de Google (iframe-google).");
+            }
+        }
     </script>
 </body>
 </html>
